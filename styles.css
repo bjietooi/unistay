@@ -508,7 +508,7 @@ a {
   }
   .hero-badge {
     display: block;
-    width: clamp(200px, 40vw, 280px);
+    width: clamp(240px, 42vw, 360px);
     margin: 0 auto 22px;
   }
   .hero-title-block {
