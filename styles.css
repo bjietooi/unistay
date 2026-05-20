@@ -632,7 +632,8 @@ a {
 
 /* ---------- Why Unistay section ---------- */
 .why {
-  padding: 100px 0;
+  padding-top: 100px;
+  padding-bottom: 100px;
   position: relative;
 }
 .why-grid {
@@ -815,7 +816,8 @@ a {
 
 /* ---------- Rooms & Pricing ---------- */
 .rooms {
-  padding: 100px 0;
+  padding-top: 100px;
+  padding-bottom: 100px;
 }
 .rooms-head {
   text-align: center;
@@ -1061,7 +1063,8 @@ a {
 
 /* ---------- Provides section ---------- */
 .provides {
-  padding: 100px 0;
+  padding-top: 100px;
+  padding-bottom: 100px;
 }
 .provides-grid {
   display: grid;
@@ -1137,7 +1140,8 @@ a {
 
 /* ---------- FAQ ---------- */
 .faq {
-  padding: 60px 0 100px;
+  padding-top: 60px;
+  padding-bottom: 100px;
 }
 .faq-grid {
   display: grid;
@@ -1555,7 +1559,61 @@ body.density-tight .provides { padding-top: 70px; padding-bottom: 70px; }
   }
   .footer-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    gap: 32px;
   }
   .nav-pill { display: none; }
+
+  /* Floating card sections — 60px horizontal padding is too heavy on mobile */
+  .peace,
+  .brand-wave {
+    padding: 44px 24px;
+    margin: 36px 16px;
+    border-radius: 20px;
+  }
+  .contact {
+    padding: 44px 24px;
+    margin: 0 16px 40px;
+    border-radius: 20px;
+  }
+  .contact-text h2 { font-size: 36px; }
+
+  /* Hero — keep side breathing room consistent with container */
+  .hero {
+    padding: 110px 24px 0;
+  }
+
+  /* Design tabs — scroll horizontally instead of wrapping oddly */
+  .design-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+    scrollbar-width: none;
+  }
+  .design-tabs::-webkit-scrollbar { display: none; }
+  .design-tab { flex-shrink: 0; max-width: none; }
+
+  /* Section vertical spacing */
+  .why,
+  .rooms,
+  .provides { padding-top: 72px; padding-bottom: 72px; }
+  .faq { padding-bottom: 72px; }
+  .design-section { padding: 60px 0 72px; }
+  .facilities { padding: 72px 0 80px; }
+}
+
+/* Small phones — single-column everything */
+@media (max-width: 480px) {
+  .room-grid { grid-template-columns: 1fr; }
+  .fac-grid { grid-template-columns: repeat(2, 1fr); }
+  .why-features { grid-template-columns: 1fr; gap: 16px; }
+  .provides-list { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+  .contact-form { grid-template-columns: 1fr; }
+  .contact-form .full,
+  .contact-form .submit-row { grid-column: 1; }
+  .faq-grid { gap: 36px; }
+  .peace,
+  .brand-wave { padding: 36px 20px; margin: 28px 12px; }
+  .contact { padding: 36px 20px; margin: 0 12px 32px; }
 }
