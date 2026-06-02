@@ -1563,6 +1563,7 @@ a {
   max-width: 1240px;
   padding: 0 28px;
   box-sizing: border-box;
+  overflow: hidden;
 }
 .fac-hero {
   position: relative;
@@ -1570,6 +1571,8 @@ a {
   overflow: hidden;
   aspect-ratio: 16 / 7;
   min-height: 200px;
+  width: 100%;
+  max-width: 100%;
 }
 .fac-hero img {
   position: absolute;
@@ -1632,6 +1635,7 @@ a {
   max-width: 1240px;
   padding: 0 28px;
   box-sizing: border-box;
+  overflow: hidden;
 }
 .fac-card {
   background: #fff;
@@ -1644,6 +1648,9 @@ a {
   transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
   cursor: default;
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   overflow: hidden;
 }
 .fac-card::before {
