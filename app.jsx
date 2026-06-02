@@ -1,7 +1,7 @@
 // Unistay landing — root app
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-  "accent": "#e11d2e",
-  "palette": "warm-red",
+  "accent": "#af3928",
+  "palette": "brown",
   "heroLayout": "split",
   "headlineStyle": "italic-serif",
   "density": "normal",
@@ -9,6 +9,7 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
 }/*EDITMODE-END*/;
 
 const PALETTES = {
+  "brown": { brand: "#af3928", deep: "#8a2c1f", soft: "#de8163", tint: "#faeee9", tint2: "#f3ddd2" },
   "warm-red": { brand: "#b21323", deep: "#7c0a14", soft: "#d22a3a", tint: "#fbecee", tint2: "#f6dade" },
   "deep-burgundy": { brand: "#9b1c2e", deep: "#6e1322", soft: "#c33b4d", tint: "#f6ebed", tint2: "#ecd5d9" },
   "sunset": { brand: "#e85d2f", deep: "#b8431c", soft: "#f48557", tint: "#fdf1eb", tint2: "#fbe1d3" },
@@ -54,7 +55,7 @@ const App = () => {
         <TweakSelect
           label="Palette"
           value={tweaks.palette}
-          options={["warm-red", "deep-burgundy", "sunset", "forest", "midnight"]}
+          options={["brown", "warm-red", "deep-burgundy", "sunset", "forest", "midnight"]}
           onChange={(v) => setTweak("palette", v)}
         />
         <TweakSection label="Layout density" />

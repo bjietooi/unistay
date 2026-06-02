@@ -2,8 +2,10 @@
 const { useState, useEffect, useRef } = React;
 
 const ASSETS = {
-  logo: "https://ik.imagekit.io/cr8hodb6q/unistay/logo_unistay.png?updatedAt=1779236726899",
-  heroBg: "https://ik.imagekit.io/cr8hodb6q/unistay/hero_bg.png?updatedAt=1779236598160",
+  logo: "https://ik.imagekit.io/cr8hodb6q/unistay/info/brown_horizontal.png",
+  logoWhite: "https://ik.imagekit.io/cr8hodb6q/unistay/info/white_horizontal.png",
+  logoSquare: "https://ik.imagekit.io/cr8hodb6q/unistay/info/brown_square.png",
+  heroBg: "https://ik.imagekit.io/cr8hodb6q/unistay/hero_bg.jpg",
   heroCondo: "https://ik.imagekit.io/cr8hodb6q/unistay/Savanna_bukit_jalil_heroshot.png?updatedAt=1779236598065",
   heroModel: "https://ik.imagekit.io/cr8hodb6q/unistay/university_student_model.png?updatedAt=1779236598029",
   heroBadge: "https://ik.imagekit.io/cr8hodb6q/unistay/official_accomodation_partner.png?updatedAt=1779236598144",
@@ -12,7 +14,7 @@ const ASSETS = {
   unistaff: "https://ik.imagekit.io/cr8hodb6q/unistay/unistaff.png?updatedAt=1779236598101",
   room: "https://ik.imagekit.io/cr8hodb6q/unistay/room_image1.png?updatedAt=1779236597984",
   location: "https://ik.imagekit.io/cr8hodb6q/unistay/location%20img.png?updatedAt=1779236597733",
-  about: "https://ik.imagekit.io/cr8hodb6q/unistay/about_us_image.png?updatedAt=1779236597748",
+  about: "https://ik.imagekit.io/cr8hodb6q/unistay/environment.webp",
   moving: "https://ik.imagekit.io/cr8hodb6q/unistay/moving_house_contact_us_img.png?updatedAt=1779236597699",
 };
 
@@ -28,7 +30,7 @@ const Nav = () => {
     <nav className="nav">
       <div className="container nav-inner">
         <a href="#" className="nav-logo" onClick={(e) => { e.preventDefault(); setActive("home"); }}>
-          <img src={ASSETS.logo} alt="Unistay" />
+          <img src={ASSETS.logoWhite} alt="Unistay" />
         </a>
         <div className="nav-pill">
           {links.map((l) => (
@@ -191,186 +193,327 @@ const Why = () => {
 };
 
 // ============ DESIGN HELPS STUDENTS ============
-const designTabs = [
-  {
-    id: "location",
-    label: "Strategic Location for IMU Students",
-    h: "A 5–10 mins walk to your university has never been easier",
-    p: "Our well-known and reputable address lets students arrive at lectures, lab sessions, and study groups on foot. Save 45 minutes daily on commute — and reclaim it for what matters: deep focus, better sleep, and a real social life.",
-    img: ASSETS.location,
+const MAP_ROUTES = {
+  main: {
+    img: "https://ik.imagekit.io/cr8hodb6q/unistay/info/Main%20Entrance.png",
+    label: "Main Entrance",
+    time: "9 min",
   },
-  {
-    id: "furnish",
-    label: "Smart Furnishing",
-    h: "Move in with everything ready and waiting",
-    p: "Every Unistay unit is fully furnished with quality beds, study desks, wardrobes, and kitchen essentials. No flat-pack assembly, no missing kettles — just unzip your suitcase and start the semester.",
-    img: ASSETS.room,
+  back: {
+    img: "https://ik.imagekit.io/cr8hodb6q/unistay/info/Back%20Entrance%20-%20Shortcut.png",
+    label: "Back Entrance",
+    time: "5 min",
   },
+};
+
+const FLOOR_PLANS = {
+  type1: "https://ik.imagekit.io/cr8hodb6q/unistay/info/Type1.png",
+  type2: "https://ik.imagekit.io/cr8hodb6q/unistay/info/Type2.png",
+};
+
+const STATIC_DESIGN_CARDS = [
   {
     id: "light",
-    label: "Good Lighting & Ventilation",
-    h: "Spaces that work as hard as you do",
-    p: "Floor-to-ceiling windows, dual-orientation airflow, and warm 3000K lighting keep your room bright through morning revisions and calm during late-night reading.",
-    img: ASSETS.room,
+    icon: "Sparkle",
+    eyebrow: "Environment",
+    title: "Good Lighting & Ventilation",
+    desc: "Floor-to-ceiling windows and dual-orientation airflow keep rooms bright and fresh.",
+    img: "https://ik.imagekit.io/cr8hodb6q/unistay/goodlight_ventilation.webp",
   },
   {
     id: "storage",
-    label: "Practical Storage",
-    h: "Smart storage for every textbook and tote",
-    p: "Under-bed drawers, vertical wardrobes, and a dedicated luggage zone keep your room tidy — even with a full anatomy syllabus on your desk.",
-    img: ASSETS.room,
+    icon: "HomeHeart",
+    eyebrow: "Furnished",
+    title: "Practical Storage",
+    desc: "Under-bed drawers, tall wardrobes, and a dedicated luggage zone for a tidy room.",
+    img: "https://ik.imagekit.io/cr8hodb6q/unistay/practical%20storage.webp",
   },
   {
     id: "maint",
-    label: "Consistent Maintenance",
-    h: "On-site team. Real response times.",
-    p: "Aircon leak at 2am? Reported by 9am, fixed by lunch. Our on-site crew runs a strict 24-hour ticket SLA so you never lose study days to a broken light bulb.",
-    img: ASSETS.unistaff,
+    icon: "Wrench",
+    eyebrow: "Service",
+    title: "Consistent Maintenance",
+    desc: "On-site crew with a strict 24-hour ticket SLA — issues fixed before they cost you study days.",
+    img: "https://ik.imagekit.io/cr8hodb6q/unistay/maintainence.webp",
   },
   {
     id: "gated",
-    label: "Gated Residential Area",
-    h: "Peace of mind, written into the postcode",
-    p: "Savanna Bukit Jalil is a private gated community with 24/7 guarded entry, CCTV coverage, and visitor screening — the kind of address parents Google and feel good about.",
-    img: ASSETS.peace,
+    icon: "Shield",
+    eyebrow: "Security",
+    title: "Gated Residential Area",
+    desc: "A private gated community with 24/7 guarded entry, CCTV, and visitor screening.",
+    img: "https://ik.imagekit.io/cr8hodb6q/unistay/gated.webp",
   },
 ];
 
-const DesignSection = () => {
-  const [tab, setTab] = useState(0);
-  const t = designTabs[tab];
+const LocationCard = () => {
+  const [route, setRoute] = useState("main");
+  const active = MAP_ROUTES[route];
   return (
-    <section className="design-section" data-screen-label="03 Design helps students">
-      <div className="container">
-        <div className="design-head">
-          <h2 className="h-section-sans">Design That Helps Students Live, Study, and Rest Better</h2>
-          <p className="lede" style={{ margin: "12px auto 0", textAlign: "center" }}>
-            Six design choices that shape every Unistay unit.
-          </p>
+    <div className="df-feature">
+      <div className="df-feature-media">
+        <img src={active.img} alt={active.label} />
+        <div className="df-feature-stat">
+          <strong>{active.time}</strong>
+          <span>walk to IMU</span>
         </div>
-        <div className="design-tabs">
-          {designTabs.map((d, i) => (
+        <div className="df-route-toggle">
+          {Object.entries(MAP_ROUTES).map(([k, v]) => (
             <button
-              key={d.id}
-              className={`design-tab ${tab === i ? "active" : ""}`}
-              onClick={() => setTab(i)}
+              key={k}
+              className={"df-route-btn" + (route === k ? " active" : "")}
+              onClick={(e) => { e.stopPropagation(); setRoute(k); }}
             >
-              {d.label}
+              <I.MapPin size={12} /> {v.label}
             </button>
           ))}
         </div>
-        <div className="design-panel">
-          <div className="design-panel-text">
-            <h3>{t.h}</h3>
-            <p>{t.p}</p>
-            <div className="design-panel-illustration">
-              <svg width="120" height="60" viewBox="0 0 120 60" fill="none" stroke="white" strokeWidth="1.4" opacity="0.6">
-                <rect x="20" y="28" width="80" height="28" rx="2" />
-                <line x1="20" y1="38" x2="100" y2="38" />
-                <rect x="28" y="42" width="20" height="10" rx="1" />
-                <rect x="72" y="42" width="20" height="10" rx="1" />
-                <path d="M30 28 L40 18 L60 8 L80 18 L90 28" />
-              </svg>
-            </div>
-          </div>
-          <div className="design-panel-art">
-            <img src={t.img} alt={t.label} key={t.id} />
-          </div>
-        </div>
       </div>
-    </section>
+      <div className="df-feature-body">
+        <span className="df-eyebrow">Location</span>
+        <h3 className="df-feature-title">Strategic Location for IMU Students</h3>
+        <p className="df-feature-desc">A 5–10 minute walk to campus — through the main gate or the back-entrance shortcut. Save 45 minutes daily on commute and reclaim it for deep focus, better sleep, and a real social life.</p>
+      </div>
+    </div>
   );
 };
 
+const LayoutCard = () => {
+  const [plan, setPlan] = useState("type1");
+  return (
+    <div className="df-feature">
+      <div className="df-feature-media df-feature-media-dark">
+        <img src={FLOOR_PLANS[plan]} alt={"Floor plan " + plan} />
+        <div className="df-plan-toggle">
+          {[
+            { k: "type1", label: "Type 1 · 2-Room" },
+            { k: "type2", label: "Type 2 · 3–5 Room" },
+          ].map((p) => (
+            <button
+              key={p.k}
+              className={"df-plan-btn" + (plan === p.k ? " active" : "")}
+              onClick={(e) => { e.stopPropagation(); setPlan(p.k); }}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+        <div className="df-feature-hint">Tap to compare floor plans</div>
+      </div>
+      <div className="df-feature-body">
+        <span className="df-eyebrow">Layout</span>
+        <h3 className="df-feature-title">Practical Layout & Furnishing</h3>
+        <p className="df-feature-desc">Every unit is mapped for student life — study desk, wardrobe, kitchen, and shared living exactly where they belong. Compare the 2-room and 3–5 room floor plans side by side.</p>
+      </div>
+    </div>
+  );
+};
+
+const DesignSection = () => (
+  <section className="design-section" data-screen-label="03 Design helps students">
+    <div className="container">
+      <div className="design-head">
+        <h2 className="h-section-sans">Design That Helps Students Live, Study, and Rest Better</h2>
+        <p className="lede" style={{ margin: "12px auto 0", textAlign: "center" }}>
+          Two things matter most — where you live and how it's laid out. Everything else supports them.
+        </p>
+      </div>
+      <div className="df-featured-grid">
+        <LocationCard />
+        <LayoutCard />
+      </div>
+      <div className="df-support-grid">
+        {STATIC_DESIGN_CARDS.map((card) => {
+          const Icon = I[card.icon];
+          return (
+            <div className="df-support-card" key={card.id}>
+              <div className="df-support-media">
+                <img src={card.img} alt={card.title} />
+                <div className="df-support-icon"><Icon size={16} /></div>
+              </div>
+              <div className="df-support-body">
+                <span className="df-eyebrow">{card.eyebrow}</span>
+                <h4 className="df-support-title">{card.title}</h4>
+                <p className="df-support-desc">{card.desc}</p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+);
+
 // ============ ROOMS & PRICING ============
-const rooms = {
-  "1-2": [
+const roomsData = {
+  type1: {
+    UG: [
+      {
+        id: "t1-ug-r1",
+        img: ASSETS.room,
+        tag: "Master Bedroom",
+        title: "2-Room Unit · Room 1",
+        desc: "Spacious master bedroom with twin beds, private study nook, and shared living area",
+        bed: 2, bath: 1, sqft: 280,
+        deposit: 1900, semRental: 11400, fullPayment: 13300, installment1: 8000, finalPayment: 5300,
+      },
+      {
+        id: "t1-ug-r2",
+        img: ASSETS.room,
+        tag: null,
+        title: "2-Room Unit · Room 2",
+        desc: "Cosy single room with dedicated study desk, wardrobe, and balcony access",
+        bed: 1, bath: 1, sqft: 210,
+        deposit: 1700, semRental: 10200, fullPayment: 11900, installment1: 7000, finalPayment: 4900,
+      },
+    ],
+    PreU: [
+      {
+        id: "t1-preu-r1",
+        img: ASSETS.room,
+        tag: "Master Bedroom",
+        title: "2-Room Unit · Room 1",
+        desc: "Spacious master bedroom with twin beds, private study nook, and shared living area",
+        bed: 2, bath: 1, sqft: 280,
+        deposit: 1900, semRental: 7600, fullPayment: 9500, installment1: 5500, finalPayment: 4000,
+      },
+      {
+        id: "t1-preu-r2",
+        img: ASSETS.room,
+        tag: null,
+        title: "2-Room Unit · Room 2",
+        desc: "Cosy single room with dedicated study desk, wardrobe, and balcony access",
+        bed: 1, bath: 1, sqft: 210,
+        deposit: 1700, semRental: 6800, fullPayment: 8500, installment1: 5000, finalPayment: 3500,
+      },
+    ],
+    bedding: [
+      { type: "Type A", price: "RM 200" },
+      { type: "Type B", price: "RM 400" },
+    ],
+  },
+  type2: [
     {
-      id: "r1",
+      id: "t2-master",
       img: ASSETS.room,
-      tag: "Most Popular",
-      units: "5 Units left",
-      price: "RM 1,400",
-      perNote: "/ month",
-      title: "2-Rooms Unit (Room 1)",
-      desc: "Bright corner suite with twin beds and queen wardrobe",
-      bed: 2,
-      bath: 1,
-      sqft: 280,
+      tag: "Premium",
+      title: "Master Twin (Ensuite)",
+      desc: "Ensuite twin room with private bathroom — ideal for privacy-conscious students",
+      bed: 2, bath: 1, sqft: 320,
+      deposit: 550, semRental: 3300, fullPayment: 3850, installment1: 1000, finalPayment: 2850,
     },
     {
-      id: "r2",
-      img: ASSETS.location,
-      tag: null,
-      units: "3 Units left",
-      price: "RM 1,200",
-      perNote: "/ month",
-      title: "2-Rooms Unit (Room 2)",
-      desc: "Cosy single with private study nook and balcony view",
-      bed: 1,
-      bath: 1,
-      sqft: 210,
-    },
-    {
-      id: "r3",
-      img: ASSETS.peace,
-      tag: null,
-      units: "2 Units left",
-      price: "RM 1,650",
-      perNote: "/ month",
-      title: "2-Rooms Premium Suite",
-      desc: "Upgraded suite with ensuite bath and pool view",
-      bed: 2,
-      bath: 2,
-      sqft: 340,
-    },
-  ],
-  "3-5": [
-    {
-      id: "r4",
+      id: "t2-middle",
       img: ASSETS.room,
       tag: "Best Value",
-      units: "4 Units left",
-      price: "RM 850",
-      perNote: "/ month / room",
-      title: "3-Rooms Unit · Shared",
-      desc: "Three private bedrooms, shared kitchen and living area",
-      bed: 3,
-      bath: 2,
-      sqft: 920,
+      title: "Middle Twin",
+      desc: "Shared twin room in the heart of the unit, close to kitchen and living areas",
+      bed: 2, bath: 1, sqft: 260,
+      deposit: 450, semRental: 2700, fullPayment: 3150, installment1: 1000, finalPayment: 2150,
     },
     {
-      id: "r5",
-      img: ASSETS.location,
-      tag: "Group Friendly",
-      units: "2 Units left",
-      price: "RM 780",
-      perNote: "/ month / room",
-      title: "5-Rooms Unit · Cohort Block",
-      desc: "Built for study cohorts — quiet zone with shared lounge",
-      bed: 5,
-      bath: 3,
-      sqft: 1480,
-    },
-    {
-      id: "r6",
-      img: ASSETS.peace,
+      id: "t2-single",
+      img: ASSETS.room,
       tag: null,
-      units: "1 Unit left",
-      price: "RM 950",
-      perNote: "/ month / room",
-      title: "4-Rooms Penthouse Block",
-      desc: "Top-floor unit with skyline views and large balcony",
-      bed: 4,
-      bath: 3,
-      sqft: 1240,
+      title: "Single Room 3 / 4 / 5",
+      desc: "Single-occupancy room in a 3–5 room unit — quiet, private, ideal for focused study",
+      bed: 1, bath: 1, sqft: 200,
+      deposit: 680, semRental: 4080, fullPayment: 4760, installment1: 1500, finalPayment: 2580,
     },
   ],
 };
 
+const fmtRM = (n) => "RM " + n.toLocaleString();
+
+const RoomCard = ({ room, showBedding, bedding }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="room-card">
+      <div className="room-card-img">
+        <img src={room.img} alt={room.title} />
+        <div className="room-card-tags">
+          {room.tag ? <div className="room-tag popular">{room.tag}</div> : <div />}
+        </div>
+      </div>
+      <div className="room-card-body">
+        <div className="rp-hero-price">
+          <span className="rp-price-eyebrow">1 Semester Rental</span>
+          <div className="rp-price-row">
+            <strong className="rp-price-num">{fmtRM(room.semRental)}</strong>
+            <span className="rp-price-per">/ sem</span>
+          </div>
+        </div>
+        <h3 className="room-title">{room.title}</h3>
+        <p className="room-desc">{room.desc}</p>
+        <div className="room-stats">
+          <div className="room-stat"><I.Bed size={15} /> {room.bed} {room.bed > 1 ? "Beds" : "Bed"}</div>
+          <div className="room-stat"><I.Bath size={15} /> {room.bath} Bath</div>
+          <div className="room-stat"><I.Ruler size={15} /> {room.sqft} sqft</div>
+        </div>
+        <div className="rp-accordion">
+          <button
+            className={"rp-accordion-btn" + (open ? " open" : "")}
+            onClick={() => setOpen(!open)}
+            aria-expanded={open}
+          >
+            <span>View Payment Plan</span>
+            <span className={"rp-chevron" + (open ? " open" : "")}>
+              <I.ChevronDown size={15} />
+            </span>
+          </button>
+          <div className={"rp-accordion-body" + (open ? " open" : "")}>
+            <div className="rp-payment-plan">
+              <div className="rp-pay-row">
+                <span>Accommodation Deposit</span>
+                <strong className="rp-pay-val deposit">{fmtRM(room.deposit)}</strong>
+              </div>
+              <div className="rp-pay-row full-pay">
+                <span>Full Payment</span>
+                <strong className="rp-pay-val full">{fmtRM(room.fullPayment)}</strong>
+              </div>
+              <div className="rp-pay-or">
+                <span>or pay by instalment</span>
+              </div>
+              <div className="rp-pay-row">
+                <span>1st Instalment</span>
+                <strong className="rp-pay-val">{fmtRM(room.installment1)}</strong>
+              </div>
+              <div className="rp-pay-row">
+                <span>Final Payment (Prior Check-in)</span>
+                <strong className="rp-pay-val">{fmtRM(room.finalPayment)}</strong>
+              </div>
+              {showBedding && bedding && (
+                <div className="rp-bedding">
+                  <div className="rp-bedding-hd">
+                    <I.Sparkle size={11} /> Bedding Add-ons (Optional)
+                  </div>
+                  <div className="rp-bedding-opts">
+                    {bedding.map((b) => (
+                      <div key={b.type} className="rp-bedding-chip">
+                        <span>{b.type}</span>
+                        <span className="rp-bedding-price">{b.price}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        <button className="rp-cta-btn">
+          Enquire Now <I.ArrowRight size={14} />
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const Rooms = () => {
-  const [type, setType] = useState("1-2");
-  const list = rooms[type];
+  const [type, setType] = useState("type1");
+  const [stuType, setStuType] = useState("UG");
+
+  const activeRooms = type === "type1" ? roomsData.type1[stuType] : roomsData.type2;
+
   return (
     <section className="rooms container" id="rooms" data-screen-label="04 Rooms & Pricing">
       <div className="rooms-head">
@@ -378,40 +521,57 @@ const Rooms = () => {
         <h2 className="h-section-sans" style={{ marginTop: 12 }}>Rooms &amp; Pricing</h2>
         <p>Schedule a private viewing — most units filled before semester intake.</p>
       </div>
-      <div className="room-toggle-wrap">
-        <div className="room-toggle">
-          <button className={type === "1-2" ? "active" : ""} onClick={() => setType("1-2")}>
-            Type 1 · 2 Rooms Unit
-          </button>
-          <button className={type === "3-5" ? "active" : ""} onClick={() => setType("3-5")}>
-            Type 2 · 3–5 Rooms Unit
-          </button>
+
+      <div className="rp-controls">
+        <div className="rp-seg-track">
+          {[
+            { key: "type1", label: "Type 1 · 2-Room Units", badge: "2 Rooms" },
+            { key: "type2", label: "Type 2 · 3–5 Room Units", badge: "3–5 Rooms" },
+          ].map((t) => (
+            <button
+              key={t.key}
+              className={"rp-seg-btn" + (type === t.key ? " active" : "")}
+              onClick={() => setType(t.key)}
+            >
+              <span className="rp-seg-badge">{t.badge}</span>
+              {t.label}
+            </button>
+          ))}
         </div>
-      </div>
-      <div className="room-grid">
-        {list.map((r) => (
-          <div className="room-card" key={r.id}>
-            <div className="room-card-img">
-              <img src={r.img} alt={r.title} />
-              <div className="room-card-tags">
-                {r.tag ? <div className="room-tag popular">{r.tag}</div> : <div />}
-                <div className="room-tag units">{r.units}</div>
-              </div>
+
+        {type === "type1" && (
+          <div className="rp-type1-controls">
+            <div className="rp-sub-toggle">
+              {[
+                { key: "UG", label: "Undergraduate" },
+                { key: "PreU", label: "Pre-University" },
+              ].map((s) => (
+                <button
+                  key={s.key}
+                  className={"rp-sub-btn" + (stuType === s.key ? " active" : "")}
+                  onClick={() => setStuType(s.key)}
+                >
+                  {s.label}
+                </button>
+              ))}
             </div>
-            <div className="room-card-body">
-              <div className="room-price">
-                <strong>{r.price}</strong>
-                {r.perNote}
-              </div>
-              <h3 className="room-title">{r.title}</h3>
-              <p className="room-desc">{r.desc}</p>
-              <div className="room-stats">
-                <div className="room-stat"><I.Bed size={16} /> {r.bed} {r.bed > 1 ? "Beds" : "Bed"}</div>
-                <div className="room-stat"><I.Bath size={16} /> {r.bath} {r.bath > 1 ? "Baths" : "Bath"}</div>
-                <div className="room-stat"><I.Ruler size={16} /> {r.sqft} sqft</div>
-              </div>
-            </div>
+            {stuType === "PreU" && (
+              <p className="rp-preu-note">
+                <I.Sparkle size={11} /> Pre-University programmes have a shorter semester duration — pricing reflects this.
+              </p>
+            )}
           </div>
+        )}
+      </div>
+
+      <div className={"room-grid" + (type === "type1" ? " grid-2" : "")}>
+        {activeRooms.map((room) => (
+          <RoomCard
+            key={room.id}
+            room={room}
+            showBedding={type === "type1"}
+            bedding={roomsData.type1.bedding}
+          />
         ))}
       </div>
     </section>
@@ -420,38 +580,65 @@ const Rooms = () => {
 
 // ============ FACILITIES ============
 const facilities = [
-  { i: "Wifi", t: "High-Speed Internet" },
-  { i: "Pool", t: "Swimming Pool" },
-  { i: "Shield", t: "24/7 Security System" },
-  { i: "Leaf", t: "Sauna" },
+  { i: "Pool", t: "Swimming Pool", d: "Resort-style pool for laps or unwinding after class.", feature: true,
+    img: "https://ik.imagekit.io/cr8hodb6q/unistay/swimmingpool.webp" },
+  { i: "Dumbbell", t: "Gymnasium Room", d: "Fully-equipped gym, open early to late.", feature: true,
+    img: "https://ik.imagekit.io/cr8hodb6q/unistay/gym.webp" },
+  { i: "Badminton", t: "Badminton Hall" },
+  { i: "Tennis", t: "Tennis Courts" },
   { i: "Building", t: "Clubhouse" },
-  { i: "Dumbbell", t: "Gymnasium" },
-  { i: "Tennis", t: "Tennis Court" },
+  { i: "Leaf", t: "Sauna" },
+  { i: "Store", t: "Mini-Mart" },
   { i: "Laundry", t: "Launderette" },
+  { i: "Playground", t: "Playground" },
+  { i: "Fence", t: "Perimeter Fencing" },
+  { i: "Shield", t: "24-Hour Security System" },
 ];
 
-const Facilities = () => (
-  <section className="facilities" data-screen-label="05 Facilities">
-    <div className="container">
-      <div className="facilities-head">
-        <span className="eyebrow">Welcome to Unistay Living</span>
-        <h2 className="h-section-sans" style={{ marginTop: 14 }}>Facilities &amp; Amenities</h2>
-        <p>Shared and private spaces designed for student life — from focused study sessions to weekend recharges, including:</p>
+const Facilities = () => {
+  const featured = facilities.filter((f) => f.feature);
+  const rest = facilities.filter((f) => !f.feature);
+  return (
+    <section className="facilities" data-screen-label="05 Facilities">
+      <div className="container">
+        <div className="facilities-head">
+          <span className="eyebrow">Welcome to Unistay Living</span>
+          <h2 className="h-section-sans" style={{ marginTop: 14 }}>Facilities &amp; Amenities</h2>
+          <p>Shared and private spaces designed for student life — from focused study sessions to weekend recharges.</p>
+        </div>
+        <div className="fac-featured">
+          {featured.map((f) => {
+            const Icon = I[f.i];
+            return (
+              <div className="fac-hero" key={f.t}>
+                <img src={f.img} alt={f.t} />
+                <div className="fac-hero-overlay" />
+                <div className="fac-hero-content">
+                  <div className="fac-hero-icon"><Icon size={20} /></div>
+                  <div>
+                    <h4>{f.t}</h4>
+                    <p>{f.d}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="fac-grid">
+          {rest.map((f) => {
+            const Icon = I[f.i];
+            return (
+              <div className="fac-card" key={f.t}>
+                <div className="fac-icon"><Icon size={24} /></div>
+                <h4 className="fac-title">{f.t}</h4>
+              </div>
+            );
+          })}
+        </div>
       </div>
-      <div className="fac-grid">
-        {facilities.map((f) => {
-          const Icon = I[f.i];
-          return (
-            <div className="fac-card" key={f.t}>
-              <div className="fac-icon"><Icon size={28} /></div>
-              <h4 className="fac-title">{f.t}</h4>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 // ============ PEACE OF MIND ============
 const Peace = () => (
@@ -484,6 +671,17 @@ const provides = [
   { i: "Phone", t: "24/7 Emergency Contact Support", p: "We will hear you. Any day, any time." },
   { i: "Lock", t: "Safe & Secure Living", p: "Keycard and biometric entry to every common space." },
   { i: "HomeHeart", t: "Thoughtfully Designed Student Homes", p: "All rooms set up and furnished for your busy life." },
+  {
+    i: "Plane",
+    t: "Airport Transfer",
+    p: "IMU provides free airport pick-up for international students upon arrival from KLIA to the IMU Campus / Student Accommodation.",
+    link: { label: "View service details", href: "#contact" },
+  },
+  {
+    i: "Bus",
+    t: "Shuttle Service",
+    p: "Free shuttle service running to and from the student accommodation and IMU Main Campus.",
+  },
   { i: "Shield", t: "Safe and Convenient Access to Campus", p: "Well-lit, walkable, 5-minute route to IMU." },
   { i: "Money", t: "Simple & Transparent Booking", p: "No surprise fees. Get a written quote upfront." },
 ];
@@ -497,7 +695,7 @@ const Provides = () => (
           Unistay Living provides:
         </h2>
         <p className="lede" style={{ marginTop: 16 }}>
-          Unistay's signature service includes 6 commitments to make Unistay your safe, thoughtful, and consistent home for the duration of your studies. We are proud to be an official accommodation partner endorsed by IMU.
+          Unistay's signature service includes a full set of commitments to make Unistay your safe, thoughtful, and consistent home for the duration of your studies. We are proud to be an official accommodation partner endorsed by IMU.
         </p>
         <div className="provides-list">
           {provides.map((p) => {
@@ -507,6 +705,11 @@ const Provides = () => (
                 <div className="provide-icon"><Icon size={20} /></div>
                 <h4>{p.t}</h4>
                 <p>{p.p}</p>
+                {p.link && (
+                  <a className="provide-link" href={p.link.href}>
+                    {p.link.label} <I.ArrowRight size={12} />
+                  </a>
+                )}
               </div>
             );
           })}
@@ -629,6 +832,55 @@ const faqs = [
         <p>
           Information on this service is available <a href="#contact">here</a>.
         </p>
+      </div>
+    ),
+  },
+  {
+    q: "How do I know which payment category applies to me?",
+    a: (
+      <div className="faq-rich">
+        <p>
+          Your payment scheme is based on your level of study. <strong>Foundation students</strong> should refer to the <strong>Pre-U</strong> category, while <strong>Degree students</strong> should follow the <strong>Undergraduate (UG)</strong> rates and schedules.
+        </p>
+      </div>
+    ),
+  },
+  {
+    q: "Can I pay my accommodation fees in installments?",
+    a: (
+      <div className="faq-rich">
+        <p>
+          Yes. If you prefer not to pay the full amount upfront, you may pay the <strong>1st Installment</strong> (as indicated in the pricing table) to secure your booking.
+        </p>
+        <p>
+          Please note that the remaining balance must be settled at least <strong>two weeks prior to your check-in date</strong>, to allow our team sufficient time for payment verification and room preparation.
+        </p>
+      </div>
+    ),
+  },
+  {
+    q: "Can I choose a specific room after a site visit?",
+    a: (
+      <div className="faq-rich">
+        <p>To ensure a smooth experience for all applicants, we follow a structured viewing and allocation process:</p>
+        <ul>
+          <li><strong>In-person viewings:</strong> You are welcome to tour our facilities. Due to operational limits, we can show a maximum of <strong>2 units per visit</strong>, depending on current availability.</li>
+          <li><strong>Remote viewings (video):</strong> For those unable to visit in person, we can provide a representative video of <strong>one unit per category</strong>. We do not provide individual videos for every specific room number.</li>
+          <li><strong>Preferences:</strong> You may indicate your preferred room or floor on your application form. While we cannot guarantee a specific room, we fulfil these requests on a best-effort basis.</li>
+        </ul>
+      </div>
+    ),
+  },
+  {
+    q: "What if I want to change my room after I move in?",
+    a: (
+      <div className="faq-rich">
+        <p>We want you to be comfortable in your new home. If you are unsatisfied with your assigned unit after payment and move-in:</p>
+        <ul>
+          <li>You may request a <strong>one-time room change</strong>.</li>
+          <li>Approval is strictly subject to <strong>room availability</strong>.</li>
+          <li>Additional administrative fees or rent differences may apply depending on the new unit category.</li>
+        </ul>
       </div>
     ),
   },
