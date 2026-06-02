@@ -141,7 +141,7 @@ const Why = () => {
         <div style={{ position: "relative" }}>
           <div className="why-dots" />
           <div className="why-img">
-            <img src={ASSETS.room} alt="Inside a Unistay room at Savanna Bukit Jalil" />
+            <img src={ASSETS.about} alt="Inside a Unistay room at Savanna Bukit Jalil" />
             <div className="play-overlay"><I.Play size={18} /></div>
           </div>
         </div>
