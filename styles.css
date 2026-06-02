@@ -1553,7 +1553,11 @@ a {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 22px;
-  margin-bottom: 22px;
+  margin: 0 auto 22px;
+  width: 100%;
+  max-width: 1240px;
+  padding: 0 28px;
+  box-sizing: border-box;
 }
 .fac-hero {
   position: relative;
@@ -1618,6 +1622,11 @@ a {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1240px;
+  padding: 0 28px;
+  box-sizing: border-box;
 }
 .fac-card {
   background: #fff;
@@ -2248,8 +2257,12 @@ body.density-tight .provides { padding-top: 70px; padding-bottom: 70px; }
   .room-grid,
   .fac-grid {
     grid-template-columns: repeat(2, 1fr);
+    padding: 0 20px;
   }
-  .fac-featured { grid-template-columns: 1fr; }
+  .fac-featured {
+    grid-template-columns: 1fr;
+    padding: 0 20px;
+  }
   .footer-grid {
     grid-template-columns: 1fr 1fr;
     gap: 32px;
@@ -2323,7 +2336,13 @@ body.density-tight .provides { padding-top: 70px; padding-bottom: 70px; }
     padding: 10px 14px;
     font-size: 13px;
   }
-  .fac-grid { grid-template-columns: repeat(2, 1fr); }
+  .fac-grid {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0 12px;
+  }
+  .fac-featured {
+    padding: 0 12px;
+  }
   .why-features { grid-template-columns: 1fr; gap: 16px; }
   .provides-list { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
