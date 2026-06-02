@@ -501,6 +501,11 @@ a {
 
 /* Hero responsive */
 @media (max-width: 1100px) {
+  /* Mobile facilities — single column, larger cards */
+  .fac-hero {
+    min-height: 280px;
+  }
+
   /* Reflow hero to a normal stacked layout — used for tablets and phones */
   .hero {
     min-height: 0;
@@ -2256,11 +2261,13 @@ body.density-tight .provides { padding-top: 70px; padding-bottom: 70px; }
   }
   .room-grid,
   .fac-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
+    gap: 12px;
     padding: 0 20px;
   }
   .fac-featured {
     grid-template-columns: 1fr;
+    gap: 16px;
     padding: 0 20px;
   }
   .footer-grid {
@@ -2337,11 +2344,16 @@ body.density-tight .provides { padding-top: 70px; padding-bottom: 70px; }
     font-size: 13px;
   }
   .fac-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
+    gap: 12px;
     padding: 0 12px;
   }
   .fac-featured {
     padding: 0 12px;
+    gap: 12px;
+  }
+  .fac-card {
+    padding: 24px;
   }
   .why-features { grid-template-columns: 1fr; gap: 16px; }
   .provides-list { grid-template-columns: 1fr; }
