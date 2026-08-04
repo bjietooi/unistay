@@ -327,11 +327,13 @@ const MAP_ROUTES = {
     img: "https://ik.imagekit.io/cr8hodb6q/unistay/info/Main%20Entrance.png",
     label: "Main Entrance",
     time: "9 min",
+    maps: "https://www.google.com/maps/dir/IMU+University+-+Bukit+Jalil+Main+Campus,+126,+Jln+Jalil+Perkasa+19,+Bukit+Jalil,+57000+Kuala+Lumpur,+Federal+Territory+of+Kuala+Lumpur/Savanna+Bukit+Jalil,+04-01,+Jalan+1%2F155a,+Bukit+Jalil,+57000+Kuala+Lumpur,+Federal+Territory+of+Kuala+Lumpur/@3.0580767,101.6863521,18z/data=!4m13!4m12!1m5!1m1!1s0x31cc4a9309dc48d9:0x403c8863f06fcdb9!2m2!1d101.6872524!2d3.0597789!1m5!1m1!1s0x31cc4a945971eaf7:0x974b12179bfdee9!2m2!1d101.687999!2d3.0560158?entry=ttu",
   },
   back: {
     img: "https://ik.imagekit.io/cr8hodb6q/unistay/info/Back%20Entrance%20-%20Shortcut.png",
     label: "Back Entrance",
     time: "5 min",
+    maps: "https://www.google.com/maps/dir/3.0570562,101.6878005/IMU+University+-+Bukit+Jalil+Main+Campus,+126,+Jln+Jalil+Perkasa+19,+Bukit+Jalil,+57000+Kuala+Lumpur,+Federal+Territory+of+Kuala+Lumpur/@3.0584329,101.6859164,18z/data=!3m1!4b1!4m9!4m8!1m0!1m5!1m1!1s0x31cc4a9309dc48d9:0x403c8863f06fcdb9!2m2!1d101.6872524!2d3.0597789!3e2?entry=ttu",
   },
 };
 
@@ -379,7 +381,18 @@ const LocationCard = () => {
   return (
     <div className="df-feature">
       <div className="df-feature-media">
-        <img src={active.img} alt={active.label} />
+        <a
+          className="df-map-link"
+          href={active.maps}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`Open ${active.label} walking route to IMU in Google Maps`}
+        >
+          <img src={active.img} alt={active.label} />
+          <span className="df-map-open">
+            <I.MapPin size={13} /> Open in Google Maps <I.ArrowRight size={12} />
+          </span>
+        </a>
         <div className="df-feature-stat">
           <strong>{active.time}</strong>
           <span>walk to IMU</span>

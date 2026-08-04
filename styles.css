@@ -885,6 +885,42 @@ a {
   transform: scale(1.02);
 }
 
+/* Clickable map (Location) — whole map opens Google Maps directions */
+.df-map-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+.df-map-open {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 14px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: var(--r-pill);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--brand);
+  box-shadow: 0 6px 18px rgba(20, 8, 6, 0.2);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  pointer-events: none; /* label only — the whole map is the link */
+}
+.df-map-link:hover .df-map-open,
+.df-map-link:focus-visible .df-map-open {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(20, 8, 6, 0.3);
+}
+.df-map-link:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: -3px;
+}
+
 /* Floating stat badge (Location) */
 .df-feature-stat {
   position: absolute;
@@ -2248,6 +2284,12 @@ body.density-tight .provides { padding-top: 70px; padding-bottom: 70px; }
   .rp-sub-toggle {
     width: 100%;
     justify-content: center;
+  }
+  .df-map-open {
+    top: 12px;
+    right: 12px;
+    padding: 8px 11px;
+    font-size: 11px;
   }
   .rp-sub-btn {
     flex: 1;
