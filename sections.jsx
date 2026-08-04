@@ -52,6 +52,9 @@ const Nav = () => {
   );
 };
 
+// Official accommodation application form (Google Form, from IMU's page).
+const APPLICATION_FORM = "https://forms.gle/jyZn6WNKR3A63SCf8";
+
 // ============ HERO ============
 // Room tour video (YouTube Short) shown in the play-button modal.
 const ROOM_TOUR_VIDEO = "https://www.youtube.com/embed/vE9Er44cW-g?autoplay=1&rel=0";
@@ -609,9 +612,9 @@ const RoomCard = ({ room, showBedding, bedding }) => {
             </div>
           </div>
         </div>
-        <button className="rp-cta-btn">
+        <a className="rp-cta-btn" href={APPLICATION_FORM} target="_blank" rel="noreferrer">
           Enquire Now <I.ArrowRight size={14} />
-        </button>
+        </a>
       </div>
     </div>
   );
@@ -878,7 +881,7 @@ const faqs = [
           <li>The University reserves the right to assign either a 3-bedroom or 2-bedroom condo unit. Room-type allocation is subject to availability, and condo unit assignments are based on the same gender.</li>
           <li>
             To apply for accommodation at Savanna Condominium, please apply through this{" "}
-            <a href="https://forms.gle/jyZn6WNKR3A63SCf8" target="_blank" rel="noreferrer">application link</a>.
+            <a href={APPLICATION_FORM} target="_blank" rel="noreferrer">application link</a>.
           </li>
           <li>
             If you do not hear back from the University within one week of applying, please email{" "}
