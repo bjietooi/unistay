@@ -43,9 +43,15 @@ const Nav = () => {
               {l.label}
             </a>
           ))}
-          <button className="btn btn-primary nav-cta" style={{ padding: "10px 22px", fontSize: 14 }}>
+          <a
+            className="btn btn-primary nav-cta"
+            style={{ padding: "10px 22px", fontSize: 14 }}
+            href={APPLICATION_FORM}
+            target="_blank"
+            rel="noreferrer"
+          >
             Enquire Now
-          </button>
+          </a>
         </div>
       </div>
     </nav>
