@@ -195,6 +195,10 @@ const Hero = () => {
       {/* untinted bg image */}
       <div className="hero-bg" />
 
+      {/* full-bleed navy band — extends from the badge across the hero,
+          passing behind the title (desktop) / down behind the condo (mobile) */}
+      <div className="hero-band" aria-hidden="true" />
+
       {/* partner badge — composed card with slow staggered reveal */}
       <div
         className="hero-badge hover-float-a"

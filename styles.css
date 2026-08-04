@@ -391,6 +391,34 @@ a {
   .hb-sheen { display: none; }
 }
 
+/* Full-bleed navy band — grows out of the badge and crosses behind the title.
+   Sits above the hero bg (z1) but below condo (z2), model (z3), title (z4). */
+.hero-band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 240px;
+  height: 72px;
+  z-index: 1;
+  background: linear-gradient(90deg, #102741 0%, #1c3d5e 55%, #142f4a 100%);
+  border-top: 1px solid rgba(230, 193, 92, 0.45);
+  border-bottom: 1px solid rgba(230, 193, 92, 0.45);
+  box-shadow: 0 16px 36px rgba(30, 6, 8, 0.28);
+  transform-origin: left center;
+  animation: bandAcross 1s cubic-bezier(0.22, 1, 0.36, 1) 1.5s both;
+}
+@keyframes bandAcross {
+  from { transform: scaleX(0); opacity: 0.5; }
+  to { transform: scaleX(1); opacity: 1; }
+}
+@keyframes bandDown {
+  from { transform: scaleY(0); opacity: 0.5; }
+  to { transform: scaleY(1); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-band { animation: none; }
+}
+
 /* Title block — right-aligned to nav container (max-width 1240 + 28px padding) */
 .hero-title-block {
   position: absolute;
@@ -643,6 +671,10 @@ a {
   }
   .hero-badge {
     display: block;
+    position: relative;
+    top: auto;
+    left: auto;
+    z-index: 5;
     width: clamp(300px, 78vw, 420px);
     margin: 0 auto 22px;
   }
@@ -658,7 +690,29 @@ a {
   .hb-title {
     font-size: 19px;
   }
+  /* Band becomes a thin vertical racing stripe — unfurls from the badge
+     down the middle of the hero, passing behind the title and condo. */
+  .hero-band {
+    left: 50%;
+    right: auto;
+    top: 170px;
+    bottom: 0;
+    height: auto;
+    width: clamp(96px, 26vw, 150px);
+    margin-left: calc(clamp(96px, 26vw, 150px) / -2);
+    background: linear-gradient(180deg, #102741 0%, #1c3d5e 60%, #142f4a 100%);
+    border-top: none;
+    border-bottom: none;
+    border-left: 1px solid rgba(230, 193, 92, 0.45);
+    border-right: 1px solid rgba(230, 193, 92, 0.45);
+    box-shadow: 0 0 36px rgba(30, 6, 8, 0.25);
+    transform-origin: center top;
+    animation: bandDown 1s cubic-bezier(0.22, 1, 0.36, 1) 1.7s both;
+  }
   .hero-title-block {
+    position: relative;
+    top: auto;
+    z-index: 4;
     padding: 0;
     text-align: center;
     margin-bottom: 22px;
@@ -685,6 +739,7 @@ a {
   /* Stage — wraps condo + model, bottom-aligned at any width, no gap to CTA */
   .hero-stage {
     position: relative;
+    z-index: 3;
     width: 100%;
     max-width: 520px;
     margin: 32px auto 0;
@@ -722,6 +777,11 @@ a {
     flex-direction: column;
     gap: 12px;
     align-items: stretch;
+    position: relative;
+    top: auto;
+    left: auto;
+    bottom: auto;
+    z-index: 4;
     margin: 0 auto;
     padding: 0 0 36px;
     width: 100%;
