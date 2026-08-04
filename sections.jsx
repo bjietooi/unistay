@@ -53,8 +53,131 @@ const Nav = () => {
 };
 
 // ============ HERO ============
+// Room tour video (YouTube Short) shown in the play-button modal.
+const ROOM_TOUR_VIDEO = "https://www.youtube.com/embed/vE9Er44cW-g?autoplay=1&rel=0";
+
+// Official IMU unit photos shown in the "View Rooms" lightbox carousel.
+const ROOM_GALLERY = [
+  { src: "https://imu.edu.my/wp-content/uploads/2025/11/IMU-Savanna-Overview.jpeg", label: "Unit Overview" },
+  { src: "https://imu.edu.my/wp-content/uploads/2025/11/IMU-Savanna-Living-Room-V1.jpeg", label: "Living Room" },
+  { src: "https://imu.edu.my/wp-content/uploads/2025/11/IMU-Savanna-Living-Room-V2.jpeg", label: "Living Room" },
+  { src: "https://imu.edu.my/wp-content/uploads/2025/11/IMU-Savanna-KitchenV1.jpeg", label: "Kitchen" },
+  { src: "https://imu.edu.my/wp-content/uploads/2025/11/IMU-Savanna-Dining-Room-V1.jpeg", label: "Dining Room" },
+  { src: "https://imu.edu.my/wp-content/uploads/2025/11/IMU-Savanna-Dining-Room-V2.jpeg", label: "Dining Room" },
+  { src: "https://imu.edu.my/wp-content/uploads/2025/11/IMU-Savanna-Bedroom-1.jpeg", label: "Bedroom" },
+  { src: "https://imu.edu.my/wp-content/uploads/2025/11/IMU-Savanna-Bedroom-2.jpeg", label: "Bedroom" },
+  { src: "https://imu.edu.my/wp-content/uploads/2025/11/IMU-Savanna-Bathroom1.jpeg", label: "Bathroom" },
+];
+
+// Quick eased scroll — faster than native smooth scrolling.
+const fastScrollTo = (id) => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const start = window.scrollY;
+  const target = el.getBoundingClientRect().top + start;
+  const dur = 450;
+  const ease = (t) => 1 - Math.pow(1 - t, 3);
+  let t0 = null;
+  const step = (ts) => {
+    if (t0 === null) t0 = ts;
+    const p = Math.min((ts - t0) / dur, 1);
+    window.scrollTo(0, start + (target - start) * ease(p));
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+};
+
+// Shared modal behaviour: lock page scroll, close on Escape.
+// Scroll lock must go on <html> — it is the scrolling element here, and its
+// `overflow-x: clip` stops body overflow from propagating to the viewport.
+const useModalBehaviour = (onClose, onKey) => {
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.key === "Escape") onClose();
+      else if (onKey) onKey(e);
+    };
+    window.addEventListener("keydown", handler);
+    const docEl = document.documentElement;
+    const prevDoc = docEl.style.overflow;
+    const prevBody = document.body.style.overflow;
+    docEl.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", handler);
+      docEl.style.overflow = prevDoc;
+      document.body.style.overflow = prevBody;
+    };
+  }, []);
+};
+
+// Render modals at document.body — escapes the hero's `isolation: isolate`
+// stacking context, which otherwise lets later sections paint over the overlay.
+const ModalPortal = ({ children }) => ReactDOM.createPortal(children, document.body);
+
+const VideoModal = ({ onClose }) => {
+  useModalBehaviour(onClose);
+  return (
+    <ModalPortal>
+      <div className="modal-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label="Room tour video">
+        <button className="modal-close" onClick={onClose} aria-label="Close video"><I.X size={22} /></button>
+        <div className="video-modal" onClick={(e) => e.stopPropagation()}>
+          <iframe
+            src={ROOM_TOUR_VIDEO}
+            title="Unistay room tour"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
+      </div>
+    </ModalPortal>
+  );
+};
+
+const RoomsLightbox = ({ onClose }) => {
+  const [idx, setIdx] = useState(0);
+  const count = ROOM_GALLERY.length;
+  const next = () => setIdx((i) => (i + 1) % count);
+  const prev = () => setIdx((i) => (i - 1 + count) % count);
+  useModalBehaviour(onClose, (e) => {
+    if (e.key === "ArrowRight") next();
+    else if (e.key === "ArrowLeft") prev();
+  });
+  const item = ROOM_GALLERY[idx];
+  return (
+    <ModalPortal>
+      <div className="modal-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label="Room photo gallery">
+        <button className="modal-close" onClick={onClose} aria-label="Close gallery"><I.X size={22} /></button>
+        <div className="lightbox" onClick={(e) => e.stopPropagation()}>
+          <button className="lightbox-nav prev" onClick={prev} aria-label="Previous photo"><I.ChevronLeft size={24} /></button>
+          <figure className="lightbox-stage">
+            <img src={item.src} alt={item.label} key={item.src} />
+            <figcaption>
+              <strong>{item.label}</strong>
+              <span>{idx + 1} / {count}</span>
+            </figcaption>
+          </figure>
+          <button className="lightbox-nav next" onClick={next} aria-label="Next photo"><I.ChevronRight size={24} /></button>
+        </div>
+        <div className="lightbox-thumbs" onClick={(e) => e.stopPropagation()}>
+          {ROOM_GALLERY.map((g, i) => (
+            <button
+              key={g.src}
+              className={"lightbox-thumb" + (i === idx ? " active" : "")}
+              onClick={() => setIdx(i)}
+              aria-label={`Photo ${i + 1}: ${g.label}`}
+            >
+              <img src={g.src} alt="" loading="lazy" />
+            </button>
+          ))}
+        </div>
+      </div>
+    </ModalPortal>
+  );
+};
+
 const Hero = () => {
   const [showDesc, setShowDesc] = useState(false);
+  const [modal, setModal] = useState(null); // null | "video" | "rooms"
   return (
     <section className="hero" id="home" data-screen-label="01 Hero">
       <Nav />
@@ -122,13 +245,20 @@ const Hero = () => {
       {/* half-disc CTA pinned to bottom — desktop. Mobile reorders via CSS. */}
       <div className="hero-disc-cta" aria-label="Primary actions">
         <div className="hero-disc-arc" />
-        <button className="hero-disc-pill left" data-role="book">Book A Viewing</button>
-        <button className="hero-disc-play" data-role="play" aria-label="Play room tour">
+        <button className="hero-disc-pill left" data-role="book" onClick={() => fastScrollTo("contact")}>
+          Book A Viewing
+        </button>
+        <button className="hero-disc-play" data-role="play" aria-label="Play room tour" onClick={() => setModal("video")}>
           <I.Play size={26} />
           <span className="hero-disc-play-label">Play Room Tour</span>
         </button>
-        <button className="hero-disc-pill right" data-role="view">View Rooms</button>
+        <button className="hero-disc-pill right" data-role="view" onClick={() => setModal("rooms")}>
+          View Rooms
+        </button>
       </div>
+
+      {modal === "video" && <VideoModal onClose={() => setModal(null)} />}
+      {modal === "rooms" && <RoomsLightbox onClose={() => setModal(null)} />}
     </section>
   );
 };
@@ -142,7 +272,6 @@ const Why = () => {
           <div className="why-dots" />
           <div className="why-img">
             <img src={ASSETS.about} alt="Inside a Unistay room at Savanna Bukit Jalil" />
-            <div className="play-overlay"><I.Play size={18} /></div>
           </div>
         </div>
         <div>
@@ -155,31 +284,31 @@ const Why = () => {
           </p>
           <div className="why-features">
             <div className="why-feat">
+              <div className="why-feat-icon"><I.Shield size={20} /></div>
+              <div className="why-feat-text">
+                <strong>Official IMU Accommodation</strong>
+                <span>Directly managed under IMU — exclusive same-gender student units</span>
+              </div>
+            </div>
+            <div className="why-feat">
+              <div className="why-feat-icon"><I.MapPin size={20} /></div>
+              <div className="why-feat-text">
+                <strong>5-Minute Walk to IMU</strong>
+                <span>400–600m walking distance to campus</span>
+              </div>
+            </div>
+            <div className="why-feat">
               <div className="why-feat-icon"><I.Sparkle size={20} /></div>
               <div className="why-feat-text">
-                <strong>Selected, fully furnished homes</strong>
-                <span>Move-in ready from day one</span>
-              </div>
-            </div>
-            <div className="why-feat">
-              <div className="why-feat-icon"><I.Building size={20} /></div>
-              <div className="why-feat-text">
-                <strong>5-minute walk to IMU</strong>
-                <span>Closest gated residence</span>
-              </div>
-            </div>
-            <div className="why-feat">
-              <div className="why-feat-icon"><I.HomeHeart size={20} /></div>
-              <div className="why-feat-text">
-                <strong>Safe, secure design</strong>
-                <span>For student peace of mind</span>
+                <strong>Newly Refurbished &amp; Fully Furnished</strong>
+                <span>Move-in ready layouts designed for study and rest</span>
               </div>
             </div>
             <div className="why-feat">
               <div className="why-feat-icon"><I.Wrench size={20} /></div>
               <div className="why-feat-text">
-                <strong>On-site managed services</strong>
-                <span>Maintenance &amp; concierge</span>
+                <strong>On-Site Support Team</strong>
+                <span>Dedicated live-in warden and maintenance crew</span>
               </div>
             </div>
           </div>
@@ -206,18 +335,16 @@ const MAP_ROUTES = {
   },
 };
 
-const FLOOR_PLANS = {
-  type1: "https://ik.imagekit.io/cr8hodb6q/unistay/info/Type1.png",
-  type2: "https://ik.imagekit.io/cr8hodb6q/unistay/info/Type2.png",
-};
+// Only the 2-room (2-tenant) unit is offered for now — Type 2 (3–5 room) removed.
+const FLOOR_PLAN = "https://ik.imagekit.io/cr8hodb6q/unistay/info/Type1.png";
 
 const STATIC_DESIGN_CARDS = [
   {
     id: "light",
     icon: "Sparkle",
     eyebrow: "Environment",
-    title: "Good Lighting & Ventilation",
-    desc: "Floor-to-ceiling windows and dual-orientation airflow keep rooms bright and fresh.",
+    title: "Optimized Light & Airflow",
+    desc: "Floor-to-ceiling windows and dual-orientation layouts designed to maximize mental energy and everyday well-being.",
     img: "https://ik.imagekit.io/cr8hodb6q/unistay/goodlight_ventilation.webp",
   },
   {
@@ -232,8 +359,8 @@ const STATIC_DESIGN_CARDS = [
     id: "maint",
     icon: "Wrench",
     eyebrow: "Service",
-    title: "Consistent Maintenance",
-    desc: "On-site crew with a strict 24-hour ticket SLA — issues fixed before they cost you study days.",
+    title: "Professional On-Site Management",
+    desc: "Backed by a live-in warden and a maintenance crew operating on a strict SLA.",
     img: "https://ik.imagekit.io/cr8hodb6q/unistay/maintainence.webp",
   },
   {
@@ -271,51 +398,34 @@ const LocationCard = () => {
       </div>
       <div className="df-feature-body">
         <span className="df-eyebrow">Location</span>
-        <h3 className="df-feature-title">Strategic Location for IMU Students</h3>
-        <p className="df-feature-desc">A 5–10 minute walk to campus — through the main gate or the back-entrance shortcut. Save 45 minutes daily on commute and reclaim it for deep focus, better sleep, and a real social life.</p>
+        <h3 className="df-feature-title">The Ultimate Campus Proximity</h3>
+        <p className="df-feature-desc">An effortless, secure walk to campus via main gate or back-entrance shortcuts. Eliminate grueling daily commutes and instantly trade transit time for peak academic focus, restorative rest, and a vibrant student life.</p>
       </div>
     </div>
   );
 };
 
-const LayoutCard = () => {
-  const [plan, setPlan] = useState("type1");
-  return (
-    <div className="df-feature">
-      <div className="df-feature-media df-feature-media-dark">
-        <img src={FLOOR_PLANS[plan]} alt={"Floor plan " + plan} />
-        <div className="df-plan-toggle">
-          {[
-            { k: "type1", label: "Type 1 · 2-Room" },
-            { k: "type2", label: "Type 2 · 3–5 Room" },
-          ].map((p) => (
-            <button
-              key={p.k}
-              className={"df-plan-btn" + (plan === p.k ? " active" : "")}
-              onClick={(e) => { e.stopPropagation(); setPlan(p.k); }}
-            >
-              {p.label}
-            </button>
-          ))}
-        </div>
-        <div className="df-feature-hint">Tap to compare floor plans</div>
-      </div>
-      <div className="df-feature-body">
-        <span className="df-eyebrow">Layout</span>
-        <h3 className="df-feature-title">Practical Layout & Furnishing</h3>
-        <p className="df-feature-desc">Every unit is mapped for student life — study desk, wardrobe, kitchen, and shared living exactly where they belong. Compare the 2-room and 3–5 room floor plans side by side.</p>
-      </div>
+const LayoutCard = () => (
+  <div className="df-feature">
+    <div className="df-feature-media df-feature-media-dark">
+      <img src={FLOOR_PLAN} alt="2-room unit floor plan" />
+      <div className="df-feature-hint">2-room unit floor plan</div>
     </div>
-  );
-};
+    <div className="df-feature-body">
+      <span className="df-eyebrow">Layout</span>
+      <h3 className="df-feature-title">Practical Layout &amp; Premium Furnishing</h3>
+      <p className="df-feature-desc">Every official IMU unit is spatially optimized for academic productivity — featuring ergonomic study zones, custom storage, and balanced shared spaces. Explore our modern 2-tenant floor plans.</p>
+    </div>
+  </div>
+);
 
 const DesignSection = () => (
   <section className="design-section" data-screen-label="03 Design helps students">
     <div className="container">
       <div className="design-head">
-        <h2 className="h-section-sans">Design That Helps Students Live, Study, and Rest Better</h2>
+        <h2 className="h-section-sans">Designed to Help You Live, Study, and Thrive</h2>
         <p className="lede" style={{ margin: "12px auto 0", textAlign: "center" }}>
-          Two things matter most — where you live and how it's laid out. Everything else supports them.
+          As IMU's official accommodation, we provide the ideal location and layout so you can focus on thriving.
         </p>
       </div>
       <div className="df-featured-grid">
@@ -392,35 +502,7 @@ const roomsData = {
       { type: "Type B", price: "RM 400" },
     ],
   },
-  type2: [
-    {
-      id: "t2-master",
-      img: ASSETS.room,
-      tag: "Premium",
-      title: "Master Twin (Ensuite)",
-      desc: "Ensuite twin room with private bathroom — ideal for privacy-conscious students",
-      bed: 2, bath: 1, sqft: 320,
-      deposit: 550, semRental: 3300, fullPayment: 3850, installment1: 1000, finalPayment: 2850,
-    },
-    {
-      id: "t2-middle",
-      img: ASSETS.room,
-      tag: "Best Value",
-      title: "Middle Twin",
-      desc: "Shared twin room in the heart of the unit, close to kitchen and living areas",
-      bed: 2, bath: 1, sqft: 260,
-      deposit: 450, semRental: 2700, fullPayment: 3150, installment1: 1000, finalPayment: 2150,
-    },
-    {
-      id: "t2-single",
-      img: ASSETS.room,
-      tag: null,
-      title: "Single Room 3 / 4 / 5",
-      desc: "Single-occupancy room in a 3–5 room unit — quiet, private, ideal for focused study",
-      bed: 1, bath: 1, sqft: 200,
-      deposit: 680, semRental: 4080, fullPayment: 4760, installment1: 1500, finalPayment: 2580,
-    },
-  ],
+  // Type 2 (3–5 room units) removed — not offered for now.
 };
 
 const fmtRM = (n) => "RM " + n.toLocaleString();
@@ -509,10 +591,8 @@ const RoomCard = ({ room, showBedding, bedding }) => {
 };
 
 const Rooms = () => {
-  const [type, setType] = useState("type1");
   const [stuType, setStuType] = useState("UG");
-
-  const activeRooms = type === "type1" ? roomsData.type1[stuType] : roomsData.type2;
+  const activeRooms = roomsData.type1[stuType];
 
   return (
     <section className="rooms container" id="rooms" data-screen-label="04 Rooms & Pricing">
@@ -523,53 +603,33 @@ const Rooms = () => {
       </div>
 
       <div className="rp-controls">
-        <div className="rp-seg-track">
+        <div className="rp-sub-toggle">
           {[
-            { key: "type1", label: "Type 1 · 2-Room Units", badge: "2 Rooms" },
-            { key: "type2", label: "Type 2 · 3–5 Room Units", badge: "3–5 Rooms" },
-          ].map((t) => (
+            { key: "UG", label: "Undergraduate (UG)" },
+            { key: "PreU", label: "Pre-University (Pre-U)" },
+          ].map((s) => (
             <button
-              key={t.key}
-              className={"rp-seg-btn" + (type === t.key ? " active" : "")}
-              onClick={() => setType(t.key)}
+              key={s.key}
+              className={"rp-sub-btn" + (stuType === s.key ? " active" : "")}
+              onClick={() => setStuType(s.key)}
             >
-              <span className="rp-seg-badge">{t.badge}</span>
-              {t.label}
+              {s.label}
             </button>
           ))}
         </div>
-
-        {type === "type1" && (
-          <div className="rp-type1-controls">
-            <div className="rp-sub-toggle">
-              {[
-                { key: "UG", label: "Undergraduate" },
-                { key: "PreU", label: "Pre-University" },
-              ].map((s) => (
-                <button
-                  key={s.key}
-                  className={"rp-sub-btn" + (stuType === s.key ? " active" : "")}
-                  onClick={() => setStuType(s.key)}
-                >
-                  {s.label}
-                </button>
-              ))}
-            </div>
-            {stuType === "PreU" && (
-              <p className="rp-preu-note">
-                <I.Sparkle size={11} /> Pre-University programmes have a shorter semester duration — pricing reflects this.
-              </p>
-            )}
-          </div>
+        {stuType === "PreU" && (
+          <p className="rp-preu-note">
+            <I.Sparkle size={11} /> Pre-University programmes have a shorter semester duration — pricing reflects this.
+          </p>
         )}
       </div>
 
-      <div className={"room-grid" + (type === "type1" ? " grid-2" : "")}>
+      <div className="room-grid grid-2">
         {activeRooms.map((room) => (
           <RoomCard
             key={room.id}
             room={room}
-            showBedding={type === "type1"}
+            showBedding
             bedding={roomsData.type1.bedding}
           />
         ))}
@@ -667,22 +727,22 @@ const Peace = () => (
 
 // ============ PROVIDES ============
 const provides = [
-  { i: "Wrench", t: "In-House Maintenance Team", p: "We handle all jobs for you. Hassle-free." },
-  { i: "Phone", t: "24/7 Emergency Contact Support", p: "We will hear you. Any day, any time." },
-  { i: "Lock", t: "Safe & Secure Living", p: "Keycard and biometric entry to every common space." },
+  { i: "Wrench", t: "Live-In Warden & Maintenance", p: "A dedicated live-in warden and our responsive in-house maintenance team keep your home running hassle-free." },
+  { i: "Phone", t: "24/7 Emergency Contact Support", p: "Our on-site support team is just a call away — any time of day or night." },
+  { i: "Lock", t: "Secure Student Living", p: "Modern keycard and biometric access across all common spaces for ultimate safety." },
   { i: "HomeHeart", t: "Thoughtfully Designed Student Homes", p: "All rooms set up and furnished for your busy life." },
   {
     i: "Plane",
     t: "Airport Transfer",
     p: "IMU provides free airport pick-up for international students upon arrival from KLIA to the IMU Campus / Student Accommodation.",
-    link: { label: "View service details", href: "#contact" },
+    link: { label: "View service details", href: "https://imu.edu.my/support-services/airport-pickup/" },
   },
   {
     i: "Bus",
-    t: "Shuttle Service",
-    p: "Free shuttle service running to and from the student accommodation and IMU Main Campus.",
+    t: "Free Campus Shuttle",
+    p: "Enjoy a free, reliable shuttle service connecting the residence directly to the IMU Campus.",
   },
-  { i: "Shield", t: "Safe and Convenient Access to Campus", p: "Well-lit, walkable, 5-minute route to IMU." },
+  { i: "Shield", t: "5-Minute Walk to Class", p: "A safe, vibrant, and well-lit neighborhood walking route that brings you right to campus gates." },
   { i: "Money", t: "Simple & Transparent Booking", p: "No surprise fees. Get a written quote upfront." },
 ];
 
@@ -692,10 +752,10 @@ const Provides = () => (
       <div>
         <span className="eyebrow">About Unistay Living</span>
         <h2 className="h-section-sans" style={{ marginTop: 14, maxWidth: 540 }}>
-          Unistay Living provides:
+          Everything You Need to Feel at Home
         </h2>
         <p className="lede" style={{ marginTop: 16 }}>
-          Unistay's signature service includes a full set of commitments to make Unistay your safe, thoughtful, and consistent home for the duration of your studies. We are proud to be an official accommodation partner endorsed by IMU.
+          As an official accommodation partner endorsed directly by IMU, Unistay pairs seamless university living with dedicated, round-the-clock care. We handle all the details so you can focus on making the most of your student journey.
         </p>
         <div className="provides-list">
           {provides.map((p) => {
@@ -706,7 +766,11 @@ const Provides = () => (
                 <h4>{p.t}</h4>
                 <p>{p.p}</p>
                 {p.link && (
-                  <a className="provide-link" href={p.link.href}>
+                  <a
+                    className="provide-link"
+                    href={p.link.href}
+                    {...(p.link.href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}
+                  >
                     {p.link.label} <I.ArrowRight size={12} />
                   </a>
                 )}
@@ -786,7 +850,8 @@ const faqs = [
           <li>Applicants can apply for student accommodation once they have accepted either a Full Offer or a Conditional Offer of study from the University.</li>
           <li>The University reserves the right to assign either a 3-bedroom or 2-bedroom condo unit. Room-type allocation is subject to availability, and condo unit assignments are based on the same gender.</li>
           <li>
-            To apply for accommodation at Savanna Condominium, please apply through this <a href="#contact">application link</a>.
+            To apply for accommodation at Savanna Condominium, please apply through this{" "}
+            <a href="https://forms.gle/jyZn6WNKR3A63SCf8" target="_blank" rel="noreferrer">application link</a>.
           </li>
           <li>
             If you do not hear back from the University within one week of applying, please email{" "}
@@ -830,7 +895,8 @@ const faqs = [
           IMU provides free airport pick-up services for international students upon arrival from KLIA to the IMU Campus or Student Accommodation.
         </p>
         <p>
-          Information on this service is available <a href="#contact">here</a>.
+          Information on this service is available{" "}
+          <a href="https://imu.edu.my/support-services/airport-pickup/" target="_blank" rel="noreferrer">here</a>.
         </p>
       </div>
     ),
@@ -840,7 +906,7 @@ const faqs = [
     a: (
       <div className="faq-rich">
         <p>
-          Your payment scheme is based on your level of study. <strong>Foundation students</strong> should refer to the <strong>Pre-U</strong> category, while <strong>Degree students</strong> should follow the <strong>Undergraduate (UG)</strong> rates and schedules.
+          Your payment scheme is based on your level of study. <strong>Foundation students</strong> should refer to the <strong>Pre-U</strong> category, while <strong>Degree &amp; Master students</strong> should follow the <strong>Undergraduate (UG)</strong> rates and schedules.
         </p>
       </div>
     ),
@@ -1006,7 +1072,7 @@ const Footer = () => (
         <div>
           <img src={ASSETS.logo} alt="Unistay" className="footer-logo" />
           <p className="footer-desc">
-            Purpose-managed student accommodation at Savanna Bukit Jalil. Endorsed accommodation partner of IMU University.
+            University-Appointed Official Accommodation Provider
           </p>
           <div className="footer-socials">
             <a className="footer-soc" href="#"><I.IG size={18} /></a>
@@ -1016,33 +1082,22 @@ const Footer = () => (
           </div>
         </div>
         <div>
-          <h5>Visit Us</h5>
-          <ul>
-            <li><a href="#"><I.MapPin size={14} /> Jalan 2A, Savanna Bukit Jalil</a></li>
-            <li><a href="#"><I.MapPin size={14} /> Jalan Sentral 2</a></li>
-            <li><a href="#"><I.MapPin size={14} /> Kuala Lumpur, MY</a></li>
-          </ul>
-        </div>
-        <div>
           <h5>Contact Us</h5>
           <ul>
-            <li><a href="#"><I.Phone size={14} /> +60 3-9012 7626</a></li>
-            <li><a href="#"><I.HomeHeart size={14} /> stay@unistay.com.my</a></li>
-            <li><a href="#"><I.Wrench size={14} /> Support portal</a></li>
+            <li><a href="tel:+60143887225"><I.Phone size={14} /> +60 14-388 7225</a></li>
+            <li><a href="mailto:booking@unistay.my"><I.HomeHeart size={14} /> booking@unistay.my</a></li>
           </ul>
         </div>
         <div>
           <h5>About Us</h5>
           <ul>
             <li><a href="#">Our story</a></li>
-            <li><a href="#">IMU partnership</a></li>
-            <li><a href="#">Press kit</a></li>
             <li><a href="#">Careers</a></li>
           </ul>
         </div>
       </div>
       <div className="footer-bottom">
-        <span>© 2026 Unistay Sdn. Bhd. All rights reserved.</span>
+        <span>© 2026 Unistay Living Sdn Bhd. All rights reserved.</span>
         <div className="footer-bottom-links">
           <a href="#">Privacy</a>
           <a href="#">Terms</a>
