@@ -8,7 +8,7 @@ const ASSETS = {
   heroBg: "https://ik.imagekit.io/cr8hodb6q/unistay/hero_bg.jpg",
   heroCondo: "https://ik.imagekit.io/cr8hodb6q/unistay/Savanna_bukit_jalil_heroshot.png?updatedAt=1779236598065",
   heroModel: "https://ik.imagekit.io/cr8hodb6q/unistay/university_student_model.png?updatedAt=1779236598029",
-  heroBadge: "https://ik.imagekit.io/cr8hodb6q/unistay/official_accomodation_partner.png?updatedAt=1779236598144",
+  imuLogo: "https://imu.edu.my/wp-content/uploads/2025/01/cropped-IMU_Logo_Icon-512.png",
   grouped: "https://ik.imagekit.io/cr8hodb6q/unistay/grouped.png?updatedAt=1779237927118",
   peace: "https://ik.imagekit.io/cr8hodb6q/unistay/student%20peace%20of%20mind%20for%20parenets.png?updatedAt=1779236598106",
   unistaff: "https://ik.imagekit.io/cr8hodb6q/unistay/unistaff.png?updatedAt=1779236598101",
@@ -195,13 +195,24 @@ const Hero = () => {
       {/* untinted bg image */}
       <div className="hero-bg" />
 
-      {/* badge — closer to model/condo */}
-      <img
-        src={ASSETS.heroBadge}
-        alt="Official accommodation partner for IMU"
+      {/* partner badge — composed card with slow staggered reveal */}
+      <div
         className="hero-badge hover-float-a"
-        draggable={false}
-      />
+        role="img"
+        aria-label="Official Accommodation Partner — IMU University"
+      >
+        <div className="hero-badge-card">
+          <span className="hb-sheen" aria-hidden="true" />
+          <div className="hb-icon">
+            <img src={ASSETS.imuLogo} alt="" draggable={false} />
+          </div>
+          <div className="hb-text">
+            <span className="hb-official">Official</span>
+            <strong className="hb-title">Accommodation<br />Partner</strong>
+            <span className="hb-uni">IMU University</span>
+          </div>
+        </div>
+      </div>
 
       {/* eyebrow + display title + UNISTAY toggle (right-aligned to nav container) */}
       <div className="hero-title-block">
