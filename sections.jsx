@@ -133,16 +133,17 @@ const VideoModal = ({ onClose }) => {
   );
 };
 
-const RoomsLightbox = ({ onClose }) => {
-  const [idx, setIdx] = useState(0);
-  const count = ROOM_GALLERY.length;
+// Generic image lightbox — `items` is [{src, label}], `initial` picks the start photo.
+const Lightbox = ({ items, initial = 0, onClose }) => {
+  const [idx, setIdx] = useState(initial);
+  const count = items.length;
   const next = () => setIdx((i) => (i + 1) % count);
   const prev = () => setIdx((i) => (i - 1 + count) % count);
   useModalBehaviour(onClose, (e) => {
     if (e.key === "ArrowRight") next();
     else if (e.key === "ArrowLeft") prev();
   });
-  const item = ROOM_GALLERY[idx];
+  const item = items[idx];
   return (
     <ModalPortal>
       <div className="modal-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label="Room photo gallery">
@@ -159,7 +160,7 @@ const RoomsLightbox = ({ onClose }) => {
           <button className="lightbox-nav next" onClick={next} aria-label="Next photo"><I.ChevronRight size={24} /></button>
         </div>
         <div className="lightbox-thumbs" onClick={(e) => e.stopPropagation()}>
-          {ROOM_GALLERY.map((g, i) => (
+          {items.map((g, i) => (
             <button
               key={g.src}
               className={"lightbox-thumb" + (i === idx ? " active" : "")}
@@ -258,7 +259,7 @@ const Hero = () => {
       </div>
 
       {modal === "video" && <VideoModal onClose={() => setModal(null)} />}
-      {modal === "rooms" && <RoomsLightbox onClose={() => setModal(null)} />}
+      {modal === "rooms" && <Lightbox items={ROOM_GALLERY} onClose={() => setModal(null)} />}
     </section>
   );
 };
@@ -432,40 +433,53 @@ const LayoutCard = () => (
   </div>
 );
 
-const DesignSection = () => (
-  <section className="design-section" data-screen-label="03 Design helps students">
-    <div className="container">
-      <div className="design-head">
-        <h2 className="h-section-sans">Designed to Help You Live, Study, and Thrive</h2>
-        <p className="lede" style={{ margin: "12px auto 0", textAlign: "center" }}>
-          As IMU's official accommodation, we provide the ideal location and layout so you can focus on thriving.
-        </p>
+const DESIGN_GALLERY = STATIC_DESIGN_CARDS.map((c) => ({ src: c.img, label: c.title }));
+
+const DesignSection = () => {
+  const [zoom, setZoom] = useState(null); // index of the enlarged card, or null
+  return (
+    <section className="design-section" data-screen-label="03 Design helps students">
+      <div className="container">
+        <div className="design-head">
+          <h2 className="h-section-sans">Designed to Help You Live, Study, and Thrive</h2>
+          <p className="lede" style={{ margin: "12px auto 0", textAlign: "center" }}>
+            As IMU's official accommodation, we provide the ideal location and layout so you can focus on thriving.
+          </p>
+        </div>
+        <div className="df-featured-grid">
+          <LocationCard />
+          <LayoutCard />
+        </div>
+        <div className="df-support-grid">
+          {STATIC_DESIGN_CARDS.map((card, i) => {
+            const Icon = I[card.icon];
+            return (
+              <button
+                type="button"
+                className="df-support-card"
+                key={card.id}
+                onClick={() => setZoom(i)}
+                aria-label={`Enlarge photo: ${card.title}`}
+              >
+                <div className="df-support-media">
+                  <img src={card.img} alt={card.title} />
+                  <div className="df-support-icon"><Icon size={16} /></div>
+                  <div className="df-support-zoom"><I.Expand size={13} /></div>
+                </div>
+                <div className="df-support-body">
+                  <span className="df-eyebrow">{card.eyebrow}</span>
+                  <h4 className="df-support-title">{card.title}</h4>
+                  <p className="df-support-desc">{card.desc}</p>
+                </div>
+              </button>
+            );
+          })}
+        </div>
       </div>
-      <div className="df-featured-grid">
-        <LocationCard />
-        <LayoutCard />
-      </div>
-      <div className="df-support-grid">
-        {STATIC_DESIGN_CARDS.map((card) => {
-          const Icon = I[card.icon];
-          return (
-            <div className="df-support-card" key={card.id}>
-              <div className="df-support-media">
-                <img src={card.img} alt={card.title} />
-                <div className="df-support-icon"><Icon size={16} /></div>
-              </div>
-              <div className="df-support-body">
-                <span className="df-eyebrow">{card.eyebrow}</span>
-                <h4 className="df-support-title">{card.title}</h4>
-                <p className="df-support-desc">{card.desc}</p>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  </section>
-);
+      {zoom !== null && <Lightbox items={DESIGN_GALLERY} initial={zoom} onClose={() => setZoom(null)} />}
+    </section>
+  );
+};
 
 // ============ ROOMS & PRICING ============
 const roomsData = {

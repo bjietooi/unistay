@@ -1028,10 +1028,36 @@ a {
   display: flex;
   flex-direction: column;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: left;
+  padding: 0;
 }
 .df-support-card:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-card);
+}
+.df-support-card:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 2px;
+}
+.df-support-zoom {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: var(--r-sm);
+  color: var(--brand);
+  opacity: 0.85;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.df-support-card:hover .df-support-zoom {
+  opacity: 1;
+  transform: scale(1.08);
 }
 .df-support-media {
   position: relative;
