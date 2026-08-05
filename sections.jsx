@@ -153,33 +153,40 @@ const Lightbox = ({ items, initial = 0, onClose }) => {
     else if (e.key === "ArrowLeft") prev();
   });
   const item = items[idx];
+  const multi = count > 1; // single-photo views drop the arrows and thumb strip
   return (
     <ModalPortal>
-      <div className="modal-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label="Room photo gallery">
+      <div className="modal-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label="Photo viewer">
         <button className="modal-close" onClick={onClose} aria-label="Close gallery"><I.X size={22} /></button>
         <div className="lightbox" onClick={(e) => e.stopPropagation()}>
-          <button className="lightbox-nav prev" onClick={prev} aria-label="Previous photo"><I.ChevronLeft size={24} /></button>
+          {multi && (
+            <button className="lightbox-nav prev" onClick={prev} aria-label="Previous photo"><I.ChevronLeft size={24} /></button>
+          )}
           <figure className="lightbox-stage">
             <img src={item.src} alt={item.label} key={item.src} />
             <figcaption>
               <strong>{item.label}</strong>
-              <span>{idx + 1} / {count}</span>
+              {multi && <span>{idx + 1} / {count}</span>}
             </figcaption>
           </figure>
-          <button className="lightbox-nav next" onClick={next} aria-label="Next photo"><I.ChevronRight size={24} /></button>
+          {multi && (
+            <button className="lightbox-nav next" onClick={next} aria-label="Next photo"><I.ChevronRight size={24} /></button>
+          )}
         </div>
-        <div className="lightbox-thumbs" onClick={(e) => e.stopPropagation()}>
-          {items.map((g, i) => (
-            <button
-              key={g.src}
-              className={"lightbox-thumb" + (i === idx ? " active" : "")}
-              onClick={() => setIdx(i)}
-              aria-label={`Photo ${i + 1}: ${g.label}`}
-            >
-              <img src={g.src} alt="" loading="lazy" />
-            </button>
-          ))}
-        </div>
+        {multi && (
+          <div className="lightbox-thumbs" onClick={(e) => e.stopPropagation()}>
+            {items.map((g, i) => (
+              <button
+                key={`${g.src}-${i}`}
+                className={"lightbox-thumb" + (i === idx ? " active" : "")}
+                onClick={() => setIdx(i)}
+                aria-label={`Photo ${i + 1}: ${g.label}`}
+              >
+                <img src={g.src} alt="" loading="lazy" />
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </ModalPortal>
   );
@@ -560,14 +567,24 @@ const fmtRM = (n) => "RM " + n.toLocaleString();
 
 const RoomCard = ({ room, showBedding, bedding }) => {
   const [open, setOpen] = useState(false);
+  const [zoom, setZoom] = useState(false);
   return (
     <div className="room-card">
-      <div className="room-card-img">
+      <button
+        type="button"
+        className="room-card-img"
+        onClick={() => setZoom(true)}
+        aria-label={`Enlarge photo: ${room.title}`}
+      >
         <img src={room.img} alt={room.title} />
         <div className="room-card-tags">
           {room.tag ? <div className="room-tag popular">{room.tag}</div> : <div />}
         </div>
-      </div>
+        <div className="img-zoom-chip"><I.Expand size={13} /></div>
+      </button>
+      {zoom && (
+        <Lightbox items={[{ src: room.img, label: room.title }]} onClose={() => setZoom(false)} />
+      )}
       <div className="room-card-body">
         <div className="rp-hero-price">
           <span className="rp-price-eyebrow">1 Semester Rental</span>
@@ -709,6 +726,8 @@ const facilities = [
 const Facilities = () => {
   const featured = facilities.filter((f) => f.feature);
   const rest = facilities.filter((f) => !f.feature);
+  const [zoom, setZoom] = useState(null); // index of the enlarged facility photo
+  const gallery = featured.map((f) => ({ src: f.img, label: f.t }));
   return (
     <section className="facilities" data-screen-label="05 Facilities">
       <div className="container">
@@ -718,12 +737,19 @@ const Facilities = () => {
           <p>Shared and private spaces designed for student life — from focused study sessions to weekend recharges.</p>
         </div>
         <div className="fac-featured">
-          {featured.map((f) => {
+          {featured.map((f, i) => {
             const Icon = I[f.i];
             return (
-              <div className="fac-hero" key={f.t}>
+              <button
+                type="button"
+                className="fac-hero"
+                key={f.t}
+                onClick={() => setZoom(i)}
+                aria-label={`Enlarge photo: ${f.t}`}
+              >
                 <img src={f.img} alt={f.t} />
                 <div className="fac-hero-overlay" />
+                <div className="img-zoom-chip"><I.Expand size={13} /></div>
                 <div className="fac-hero-content">
                   <div className="fac-hero-icon"><Icon size={20} /></div>
                   <div>
@@ -731,10 +757,13 @@ const Facilities = () => {
                     <p>{f.d}</p>
                   </div>
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>
+        {zoom !== null && (
+          <Lightbox items={gallery} initial={zoom} onClose={() => setZoom(null)} />
+        )}
         <div className="fac-grid">
           {rest.map((f) => {
             const Icon = I[f.i];
@@ -1061,7 +1090,7 @@ const Contact = () => {
         <h6>Contact us today</h6>
         <h2>Ready to Move in?</h2>
         <p>
-          Let our admissions team safely help you apply for the perfect home — within 48 hours of submission.
+          Let our admissions team safely help you apply for the perfect home — within 24 hours of submission.
         </p>
         <div style={{ display: "flex", gap: 22, marginTop: 26, alignItems: "center" }}>
           <img src={ASSETS.moving} alt="Moving in to Unistay" style={{ width: "60%", borderRadius: "var(--r-lg)", maxWidth: 360 }} />
@@ -1098,7 +1127,7 @@ const Contact = () => {
           />
           <div className="submit-row">
             <button type="submit">Submit enquiry</button>
-            <span style={{ fontSize: 12, opacity: 0.85 }}>We typically reply within 4 business hours.</span>
+            <span style={{ fontSize: 12, opacity: 0.85 }}>We typically reply within 24 hours.</span>
           </div>
         </form>
       ) : (
@@ -1106,7 +1135,7 @@ const Contact = () => {
           <div className="contact-success">
             <strong>Enquiry received — thanks, {form.name.split(" ")[0]}!</strong>
             <span style={{ fontSize: 14, opacity: 0.9 }}>
-              An admissions advisor will be in touch within 4 business hours at {form.email}.
+              An admissions advisor will be in touch within 24 hours at {form.email}.
             </span>
           </div>
         </div>
