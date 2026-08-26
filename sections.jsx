@@ -66,16 +66,19 @@ const APPLICATION_FORM = "https://forms.gle/jyZn6WNKR3A63SCf8";
 const ROOM_TOUR_VIDEO = "https://www.youtube.com/embed/vE9Er44cW-g?autoplay=1&rel=0";
 
 // Official IMU unit photos shown in the "View Rooms" lightbox carousel.
+// Ordered by source file name, which puts the two block floor plans after the unit photos.
 const ROOM_GALLERY = [
-  { src: "https://imu.edu.my/wp-content/uploads/2025/11/IMU-Savanna-Overview.jpeg", label: "Unit Overview" },
-  { src: "https://imu.edu.my/wp-content/uploads/2025/11/IMU-Savanna-Living-Room-V1.jpeg", label: "Living Room" },
-  { src: "https://imu.edu.my/wp-content/uploads/2025/11/IMU-Savanna-Living-Room-V2.jpeg", label: "Living Room" },
-  { src: "https://imu.edu.my/wp-content/uploads/2025/11/IMU-Savanna-KitchenV1.jpeg", label: "Kitchen" },
-  { src: "https://imu.edu.my/wp-content/uploads/2025/11/IMU-Savanna-Dining-Room-V1.jpeg", label: "Dining Room" },
-  { src: "https://imu.edu.my/wp-content/uploads/2025/11/IMU-Savanna-Dining-Room-V2.jpeg", label: "Dining Room" },
-  { src: "https://imu.edu.my/wp-content/uploads/2025/11/IMU-Savanna-Bedroom-1.jpeg", label: "Bedroom" },
-  { src: "https://imu.edu.my/wp-content/uploads/2025/11/IMU-Savanna-Bedroom-2.jpeg", label: "Bedroom" },
-  { src: "https://imu.edu.my/wp-content/uploads/2025/11/IMU-Savanna-Bathroom1.jpeg", label: "Bathroom" },
+  { src: "https://ik.imagekit.io/cr8hodb6q/unistay/savanna/IMU%20Savanna%20Bathroom1.jpeg", label: "Bathroom" },
+  { src: "https://ik.imagekit.io/cr8hodb6q/unistay/savanna/IMU%20Savanna%20Bedroom%201.jpeg", label: "Bedroom" },
+  { src: "https://ik.imagekit.io/cr8hodb6q/unistay/savanna/IMU%20Savanna%20Bedroom%202.jpeg", label: "Bedroom" },
+  { src: "https://ik.imagekit.io/cr8hodb6q/unistay/savanna/IMU%20Savanna%20Dining%20Room%20V1.jpeg", label: "Dining Room" },
+  { src: "https://ik.imagekit.io/cr8hodb6q/unistay/savanna/IMU%20Savanna%20Dining%20Room%20V2.jpeg", label: "Dining Room" },
+  { src: "https://ik.imagekit.io/cr8hodb6q/unistay/savanna/IMU%20Savanna%20KitchenV1.jpeg", label: "Kitchen" },
+  { src: "https://ik.imagekit.io/cr8hodb6q/unistay/savanna/IMU%20Savanna%20Living%20Room%20V1.jpeg", label: "Living Room" },
+  { src: "https://ik.imagekit.io/cr8hodb6q/unistay/savanna/IMU%20Savanna%20Living%20Room%20V2.jpeg", label: "Living Room" },
+  { src: "https://ik.imagekit.io/cr8hodb6q/unistay/savanna/IMU%20Savanna%20Overview.jpeg", label: "Unit Overview" },
+  { src: "https://ik.imagekit.io/cr8hodb6q/unistay/savanna/Savanna%20Block%20A.jpg", label: "Block A Floor Plan" },
+  { src: "https://ik.imagekit.io/cr8hodb6q/unistay/savanna/Savanna%20Block%20B.jpeg", label: "Block B Floor Plan" },
 ];
 
 // Quick eased scroll — faster than native smooth scrolling.
